@@ -111,7 +111,7 @@
       max-width: 100%;
     }
 
-    .spotify-embed {
+    .youtube-embed {
       border-radius: 20px;
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
       margin: 20px;
@@ -143,7 +143,7 @@
     <div class="heart">❤️</div>
   </div>
 
-  <!-- Tela 3: Final (imagem, Spotify, QR Code) -->
+  <!-- Tela 3: Final (imagem, YouTube, QR Code) -->
   <div id="final-screen">
     <h1>Bem-vindo meu amor! 💖</h1>
     <p class="image-caption">Obrigada por todos os nossos momentos juntos</p>
@@ -151,7 +151,7 @@
     <p>Essa é uma mensagem para que você se lembre que estarei ao seu lado sempre, não importa o que aconteça, ok?</p>
     <p>Obrigada por tudo que você faz e fez por mim diariamente! Eu te amo infinitamente, você é mais do que essencial pra minha vida! <3</p>
     <p class="video-caption">Por fim, uma música que faz lembrar da gente:</p>
-    <iframe class="spotify-embed" src="https://open.spotify.com/embed/track/5V3oqYBh0c3iV7E4V6fL9o" width="320" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe class="youtube-embed" width="320" height="180" src="https://www.youtube.com/embed/3heO9XZpp2E?autoplay=1&mute=0" frameborder="0" allowfullscreen></iframe>
     <div class="heart">❤️</div>
     <div id="qrcode"></div>
   </div>
@@ -161,7 +161,7 @@
   <script>
     // Calcular duração (dias, horas, minutos)
     const startDate = new Date('2025-01-21T00:00:00');
-    const currentDate = new Date('2025-06-06T10:29:00-03:00');
+    const currentDate = new Date('2025-06-06T10:50:00-03:00');
     const diffMs = currentDate - startDate;
     const daysTogether = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -192,7 +192,7 @@
 
     // Aceitar a proposta
     function acceptProposal() {
-      document.getElementById('response-message').innerText = 'Aaaa, você disse sim! Acho bom... eu te amo💖';
+      document.getElementById('response-message').innerText = 'Aaaa, você disse sim! Acho bom... eu te amo pra sempre! 💖';
       document.getElementById('response-message').style.display = 'block';
       document.getElementById('no-button').style.display = 'none';
       document.getElementById('yes-button').style.display = 'none';
@@ -206,6 +206,9 @@
     function goToFinal() {
       document.getElementById('days-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'flex';
+      // Garantir que o vídeo do YouTube comece a tocar
+      const iframe = document.querySelector('.youtube-embed');
+      iframe.src = iframe.src; // Força o reload do iframe para garantir autoplay
     }
   </script>
 </body>
