@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nosso cantinho</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to right, #ffe6f0, #e6f7ff);
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      color: #ff69b4;
+    }
+
+    h1 {
+      color: #ff69b4;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .heart {
+      font-size: 40px;
+      color: red;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-family: 'Comic Sans MS', cursive;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff85c2;
+    }
+
+    #proposal-screen {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    #days-screen {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #final-screen {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      padding-bottom: 20px;
+    }
+
+    #no-button {
+      position: absolute;
+      transition: transform 0.2s;
+    }
+
+    #yes-button {
+      background-color: #ff69b4;
+    }
+
+    #yes-button:hover {
+      background-color: #ff85c2;
+    }
+
+    #response-message {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #ff69b4;
+      display: none;
+    }
+
+    #qrcode {
+      margin-top: 30px;
+    }
+
+    img {
+      width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      margin: 20px;
+      max-width: 100%;
+    }
+
+    .spotify-embed {
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      margin: 20px;
+      max-width: 100%;
+    }
+
+    p.image-caption, p.video-caption {
+      font-size: 18px;
+      color: #ff69b4;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Tela 1: Proposta -->
+  <div id="proposal-screen">
+    <h1>Você aceita ficar comigo pra sempre? 💞</h1>
+    <div>
+      <button id="yes-button" onclick="acceptProposal()">Sim</button>
+      <button id="no-button" onmouseover="moveNoButton()">Não</button>
+    </div>
+    <div id="response-message"></div>
+  </div>
+
+  <!-- Tela 2: Dias juntos -->
+  <div id="days-screen">
+    <h1 id="days-together"></h1>
+    <button onclick="goToFinal()">Continuar</button>
+    <div class="heart">❤️</div>
+  </div>
+
+  <!-- Tela 3: Final (imagem, Spotify, QR Code) -->
+  <div id="final-screen">
+    <h1>Bem-vindo meu amor! 💖</h1>
+    <p class="image-caption">Obrigada por todos os nossos momentos juntos</p>
+    <img src="imagem.jpg" alt="Imagem Fofa">
+    <p>Essa é uma mensagem para que você se lembre que estarei ao seu lado sempre, não importa o que aconteça, ok?</p>
+    <p>Obrigada por tudo que você faz e fez por mim diariamente! Eu te amo infinitamente, você é mais do que essencial pra minha vida! <3</p>
+    <p class="video-caption">Por fim, uma música que faz lembrar da gente:</p>
+    <iframe class="spotify-embed" src="https://open.spotify.com/embed/track/5V3oqYBh0c3iV7E4V6fL9o" width="320" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <div class="heart">❤️</div>
+    <div id="qrcode"></div>
+  </div>
+
+  <!-- Bibliotecas e scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    // Calcular duração (dias, horas, minutos)
+    const startDate = new Date('2025-01-21T00:00:00');
+    const currentDate = new Date('2025-06-06T10:29:00-03:00');
+    const diffMs = currentDate - startDate;
+    const daysTogether = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('days-together').innerText = `${daysTogether} dias, ${hours} horas e ${minutes} minutos amando você! 💕`;
+
+    // Gerar QR Code
+    const localURL = window.location.href;
+    QRCode.toCanvas(document.getElementById('qrcode'), localURL, { width: 200 }, function (error) {
+      if (error) console.error(error);
+    });
+
+    // Mover o botão "Não" dentro dos limites da tela
+    function moveNoButton() {
+      const noButton = document.getElementById('no-button');
+      const screen = document.getElementById('proposal-screen');
+      const screenRect = screen.getBoundingClientRect();
+      const buttonRect = noButton.getBoundingClientRect();
+      
+      // Limites baseados na área visível da tela
+      const maxX = screenRect.width - buttonRect.width - 20;
+      const maxY = screenRect.height - buttonRect.height - 20;
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+      
+      noButton.style.transform = `translate(${newX}px, ${newY}px)`;
+    }
+
+    // Aceitar a proposta
+    function acceptProposal() {
+      document.getElementById('response-message').innerText = 'Aaaa, você disse sim! Acho bom... eu te amo💖';
+      document.getElementById('response-message').style.display = 'block';
+      document.getElementById('no-button').style.display = 'none';
+      document.getElementById('yes-button').style.display = 'none';
+      setTimeout(() => {
+        document.getElementById('proposal-screen').style.display = 'none';
+        document.getElementById('days-screen').style.display = 'flex';
+      }, 2000);
+    }
+
+    // Ir para a tela final
+    function goToFinal() {
+      document.getElementById('days-screen').style.display = 'none';
+      document.getElementById('final-screen').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
